@@ -1,0 +1,6 @@
+@BethanysPieShopWebAPI_HostAddress = http://localhost:5043
+
+GET {{BethanysPieShopWebAPI_HostAddress}}
+Accept: application/json
+
+###
