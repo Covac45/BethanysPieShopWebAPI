@@ -2,9 +2,9 @@
 
 namespace BethanysPieShopWebAPI.Auth.Services
 {
-    public interface ITokenGenerationService
+    public interface ITokenService
     {
         string GenerateJWTToken(User user);
-
+        string RenewJWTToken(string token);
     }
 }

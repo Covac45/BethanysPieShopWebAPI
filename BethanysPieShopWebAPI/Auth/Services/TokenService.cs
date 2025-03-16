@@ -5,11 +5,11 @@ using System.Security.Claims;
 
 namespace BethanysPieShopWebAPI.Auth.Services
 {
-    public class TokenGenerationService : ITokenGenerationService
+    public class TokenService : ITokenService
     {
         public IConfiguration _configuration { get; }
 
-        public TokenGenerationService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -26,6 +26,8 @@ namespace BethanysPieShopWebAPI.Auth.Services
             claimsForToken.Add(new Claim("family_name", user.LastName));
             claimsForToken.Add(new Claim("role", user.Role));
 
+            
+
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
@@ -41,5 +43,9 @@ namespace BethanysPieShopWebAPI.Auth.Services
             return tokenToReturn;
         }
 
+        public string RenewJWTToken(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

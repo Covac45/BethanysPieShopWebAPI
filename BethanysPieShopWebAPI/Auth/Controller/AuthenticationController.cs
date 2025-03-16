@@ -16,12 +16,12 @@ namespace BethanysPieShopWebAPI.Auth.Controller
     {
 
         public IUserRepository _userRepository;
-        public ITokenGenerationService _tokenGneerationService;
+        public ITokenService _tokenGneerationService;
 
         public IConfiguration _configuration { get; }
 
 
-        public AuthenticationController(IConfiguration configuration, IUserRepository userRepository, ITokenGenerationService tokenGneerationService)
+        public AuthenticationController(IConfiguration configuration, IUserRepository userRepository, ITokenService tokenGneerationService)
         {
             _userRepository = userRepository;
             _tokenGneerationService = tokenGneerationService;
@@ -33,8 +33,19 @@ namespace BethanysPieShopWebAPI.Auth.Controller
             public string Username { get; set; }
             public string Password { get; set; }
         }
-        
-        [HttpPost("authenticate")]
+
+        public class AuthenticationRequestResponse
+        {
+            public User User { get; set; }
+            public string AccessToken { get; set; }
+            public AuthenticationRequestResponse(User user, string accessToken)
+            {
+                User = user;
+                AccessToken = accessToken;
+            }
+        }
+
+        [HttpPost("login")]
         public async Task<ActionResult<string>> Authenticate(AuthenticationRequestBody authenticationRequestBody)
         {
             //Validate user credentials
@@ -49,7 +60,27 @@ namespace BethanysPieShopWebAPI.Auth.Controller
 
             //convert to string and return to user
             var tokenToReturn = _tokenGneerationService.GenerateJWTToken(user);
-            return Ok(tokenToReturn);
+
+            return Ok(new AuthenticationRequestResponse(user, tokenToReturn));
+        }
+
+        [HttpPost("validate")]
+        public async Task<ActionResult<string>> Validate(AuthenticationRequestBody authenticationRequestBody)
+        {
+            //Validate user credentials
+            var user = await _userRepository.CheckUserCredentials(
+                authenticationRequestBody.Username,
+                authenticationRequestBody.Password);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            //convert to string and return to user
+            var tokenToReturn = _tokenGneerationService.GenerateJWTToken(user);
+
+            return Ok(new AuthenticationRequestResponse(user, tokenToReturn));
         }
     }
 }

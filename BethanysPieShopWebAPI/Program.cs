@@ -38,7 +38,7 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ITokenGenerationService, TokenGenerationService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication("Bearer")
@@ -50,7 +50,8 @@ builder.Services.AddAuthentication("Bearer")
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["Authentication:Issuer"],
                 ValidAudience = builder.Configuration["Authentication:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"])),
+                ValidateLifetime = true
             };
         }
     );

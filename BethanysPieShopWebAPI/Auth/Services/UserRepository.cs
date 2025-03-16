@@ -16,7 +16,7 @@ namespace BethanysPieShopWebAPI.Auth.Services
             _dbContext = userContext ?? throw new ArgumentNullException(nameof(userContext)); ;
         }
 
-        public async Task<User> GetUser(UserDto userDto)
+        public async Task<User> GetUser(UserLoginDto userDto)
         {
             var userToReturn = await CheckUserCredentials(userDto.Username, userDto.Password);
 

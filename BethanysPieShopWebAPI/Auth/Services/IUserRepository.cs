@@ -6,7 +6,7 @@ namespace BethanysPieShopWebAPI.Auth.Services
 {
     public interface IUserRepository
     {
-        Task<User> GetUser(UserDto userDto);
+        Task<User> GetUser(UserLoginDto userLoginDto);
 
         Task<User> CheckUserCredentials(string username, string password);
     }
